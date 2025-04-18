@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f0f0f0;
+      color: #333;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    form {
+      margin-top: 2rem;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .back-link {
+      display: block;
+      margin-bottom: 1rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Your Cart</h1>
+  </header>
+
+  <div class="container">
+    <a href="product.html" class="back-link">← Back to Products</a>
+
+    <div id="cart-table"></div>
+
+    <form id="customer-form">
+      <h2>Customer Information</h2>
+      <input type="text" id="fullname" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+      <textarea id="address" placeholder="Shipping Address" required></textarea>
+      <button type="submit">Place Order</button>
+    </form>
+  </div>
+
+  <script>
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cart-table');
+      if (cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty.</p>';
+        return;
+      }
+      let html = '<table><thead><tr><th>Product</th><th>Price ($)</th><th>Qty</th><th>Total ($)</th></tr></thead><tbody>';
+      let total = 0;
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        html += `<tr><td>${item.name}</td><td>${item.price.toFixed(2)}</td><td>${item.quantity}</td><td>${itemTotal.toFixed(2)}</td></tr>`;
+      });
+      html += `<tr><td colspan="3"><strong>Total</strong></td><td><strong>${total.toFixed(2)}</strong></td></tr>`;
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    document.getElementById('customer-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const fullname = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      const order = {
+        fullname,
+        email,
+        address,
+        cart,
+        orderDate: new Date().toLocaleString()
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+
+        if (response.ok) {
+          alert("Order placed successfully!");
+          localStorage.removeItem('cart');
+          loadCart();
+          this.reset();
+        } else {
+          alert("Failed to submit order.");
+        }
+      } catch (err) {
+        alert("Server error. Try again later.");
+      }
+    });
+
+    loadCart();
+  </script>
+</body>
+</html>

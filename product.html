@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Products</title>
+  <style>
+    /* Reset and Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Header */
+    header {
+      background-color: #900c3f;
+      color: #fff;
+      padding: 1rem 0;
+      position: relative;
+      z-index: 20;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .menu-toggle {
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+    }
+
+    nav.drawer {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #fff;
+      color: #333;
+      width: 200px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    nav.drawer.open {
+      transform: translateX(0);
+    }
+
+    nav.drawer ul {
+      list-style: none;
+      padding: 1rem;
+    }
+
+    nav.drawer li {
+      margin-bottom: 1rem;
+    }
+
+    nav.drawer a {
+      text-decoration: none;
+      color: #900c3f;
+      font-weight: bold;
+      transition: color 0.2s ease;
+    }
+
+    nav.drawer a.active {
+      color: #e74c3c;
+    }
+
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 10;
+    }
+
+    .backdrop.show {
+      display: block;
+    }
+
+    /* Hero */
+    .hero {
+      background: #fce4ec;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      color: #900c3f;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    /* Filters */
+    .filter-buttons {
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .filter-btn {
+      background-color: #900c3f;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background-color: #c70039;
+    }
+
+    /* Products */
+    .products-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 6rem;
+    }
+
+    .product-card {
+      background-color: #fff0f5;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 0.8rem;
+    }
+
+    .product-card h4 {
+      font-size: 1.2rem;
+      color: #900c3f;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-button {
+      background-color: #900c3f;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .cart-button:hover {
+      background-color: #c70039;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      margin-top: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav.drawer {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="logo">Baverages</div>
+      <button class="menu-toggle" aria-label="Toggle Menu">☰</button>
+      <nav class="drawer" aria-label="Main Navigation">
+        <ul>
+          <li><a href="sobolo.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="product.html" class="active">Products</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="orders.html">Orders</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="backdrop"></div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <h2>Discover Our Refreshing Lineup</h2>
+      <p>Choose from sobolo, juice, soda, and more!</p>
+    </section>
+
+    <!-- Filter Buttons -->
+    <section class="filter-buttons container">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="sobolo">Sobolo</button>
+      <button class="filter-btn" data-filter="juice">Juice</button>
+      <button class="filter-btn" data-filter="soda">Soda</button>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="products-container container">
+      
+      <div class="product-card" data-category="sobolo">
+        <img src="images/sobolo.jpg" alt="Classic Sobolo" loading="lazy" />
+        <h4>Classic Sobolo</h4>
+        <p>Refresh Naturally with Classic Sobolo!</p>
+        <p>GHS 10.00</p>
+        <button class="cart-button" data-name="Classic Sobolo" data-price="10" onclick="addToCart('Classic Sobolo', 10.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="sobolo">
+        <img src="images/sobolo1.png" alt="Classic Sobolo" loading="lazy" />
+        <h4>Classic Sobolo</h4>
+        <p>GHS 10.00</p>
+        <button class="cart-button" data-name="Classic Sobolo" data-price="10" onclick="addToCart('Classic Sobolo', 10.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="sobolo">
+        <img src="images/sobolo10.png" alt="Classic Sobolo" loading="lazy" />
+        <h4>Classic Sobolo</h4>
+        <p>GHS 10.00</p>
+        <button class="cart-button" data-name="Classic Sobolo" data-price="10" onclick="addToCart('Classic Sobolo',10.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="sobolo">
+        <img src="images/sobolo5.png" alt="Classic Sobolo" loading="lazy" />
+        <h4>Classic Sobolo</h4>
+        <p>GHS 10.00</p>
+        <button class="cart-button" data-name="Classic Sobolo" data-price="10"onclick="addToCart('Classic Sobolo',8.00)">Add to Cart</button>
+      </div>
+
+      <div class="product-card" data-category="juice">
+        <img src="images/mango-juice.webp" alt="Mango Juice" loading="lazy" />
+        <h4>Mango Juice</h4>
+        <p>GHS 8.00</p>
+        <button class="cart-button" data-name="Mango Juice" data-price="8" onclick="addToCart('Mango Juice',8.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="juice">
+        <img src="images/mango1.jpg" alt="Mango Juice" loading="lazy" />
+        <h4>Mango Juice</h4>
+        <p>GHS 8.00</p>
+        <button class="cart-button" data-name="Mango Juice" data-price="8"onclick="addToCart('Mango Juice',8.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="juice">
+        <img src="images/mango2.jpg" alt="Mango Juice" loading="lazy" />
+        <h4>Mango Juice</h4>
+        <p>GHS 8.00</p>
+        <button class="cart-button" data-name="Mango Juice" data-price="8"onclick="addToCart('Mango Juice',8.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="juice">
+        <img src="images/mango3.jpg" alt="Mango Juice" loading="lazy" />
+        <h4>Mango Juice</h4>
+        <p>GHS 8.00</p>
+        <button class="cart-button" data-name="Mango Juice" data-price="8"onclick="addToCart('Mango Juice', 8.00)">Add to Cart</button>
+      </div>
+
+
+
+
+      <div class="product-card" data-category="soda">
+        <img src="images/solda.jpg" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"onclick="addToCart('Sparkling solda', 6.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="soda">
+        <img src="images/green.jpg" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"  onclick="addToCart('Sparkling Soda', 6.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="soda">
+        <img src="images/sp.jpg" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"onclick="addToCart('Sparkling Soda', 6.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="soda">
+        <img src="images/spo.jpg" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"onclick="addToCart('Sparkling Soda', 6.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="soda">
+        <img src="images/c130.png" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"onclick="addToCart('Sparkling Soda', 6.00)">Add to Cart</button>
+      </div>
+      
+      <div class="product-card" data-category="soda">
+        <img src="images/ib.jpg" alt="Sparkling Soda" loading="lazy" />
+        <h4>Sparkling Soda</h4>
+        <p>GHS 6.00</p>
+        <button class="cart-button" data-name="Sparkling Soda" data-price="6"onclick="addToCart('Sparkling Soda', 6.00)">Add to Cart</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Baverageis. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const drawer = document.querySelector('.drawer');
+    const backdrop = document.querySelector('.backdrop');
+
+    menuToggle.addEventListener('click', () => {
+      drawer.classList.toggle('open');
+      backdrop.classList.toggle('show');
+    });
+
+    backdrop.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      backdrop.classList.remove('show');
+    });
+  
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+cart.push({ name: "Mango Juice", quantity: 2, price: 12.5 });
+localStorage.setItem("cart", JSON.stringify(cart));
+
+  function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ name, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${name} added to cart!`);
+  }
+    // Product filtering
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const products = document.querySelectorAll('.product-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelector('.filter-btn.active')?.classList.remove('active');
+        button.classList.add('active');
+
+        const filter = button.dataset.filter;
+        products.forEach(product => {
+          const category = product.dataset.category;
+          product.style.display = (filter === 'all' || filter === category) ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

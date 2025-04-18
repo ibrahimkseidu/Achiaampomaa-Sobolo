@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Baverageis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      background-color: #fafafa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    header {
+      background-color: #8B0000;
+      color: #fff;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .menu-toggle {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: white;
+      display: none;
+      cursor: pointer;
+    }
+
+    nav.drawer {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav.drawer ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    nav.drawer a {
+      font-weight: 500;
+      color: #fff;
+      transition: color 0.3s;
+    }
+
+    nav.drawer a:hover,
+    nav.drawer a.active {
+      color: #ffcccb;
+    }
+
+    .hero {
+      background: url('images/sobolo5.png') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 6rem 1rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .btn {
+      background-color: #8B0000;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #b22222;
+    }
+
+    .slider {
+      display: flex;
+      overflow-x: auto;
+      gap: 1rem;
+      padding: 2rem 0;
+      scroll-snap-type: x mandatory;
+    }
+
+    .slide {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      width: 300px;
+      height: 200px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .slide:hover {
+      transform: scale(1.05);
+    }
+
+    .features,
+    .highlights {
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #111;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav.drawer {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: #fff;
+        color: #333;
+        flex-direction: column;
+        width: 100%;
+        display: none;
+      }
+
+      nav.drawer.open {
+        display: flex;
+      }
+
+      nav.drawer ul {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      nav.drawer a {
+        color: #8B0000;
+      }
+
+      nav.drawer a.active {
+        color: #b22222;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <h1 class="logo">Beverages</h1>
+      <button class="menu-toggle" aria-label="Toggle Menu">&#9776;</button>
+      <nav class="drawer">
+        <ul>
+          <li><a href="sobolo.html" class="active">Home</a></li>
+          <li><a href="product.html">Products</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="cart.html">Cart</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h2>Welcome to Acheampomaa</h2>
+      <h3>Special Sobolo & Ice Cream</h3>
+      <p>Experience freshness, quality, and tradition with every sip and scoop.</p>
+      <a href="product.html" class="btn">Explore Products</a>
+    </div>
+  </section>
+  
+
+  <!-- Image Slider -->
+  <section class="slider container">
+    <img src="images/solda.jpg" class="slide" alt="Sobolo 1">
+    <img src="images/spo.jpg" class="slide" alt="Sobolo2">
+    <img src="images/sobolo10.png" class="slide" alt="Sobolo 3">
+    <img src="images/sobolo5.png" class="slide" alt="Sobolo 4">
+    <img src="images/sp.jpg" class="slide" alt="sp"

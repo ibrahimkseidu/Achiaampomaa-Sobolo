@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baverageis | About Us</title>
+
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      background-color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Header */
+    header {
+      background-color: #900c3f;
+      color: #fff;
+      padding: 1rem 0;
+      position: relative;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .menu-toggle {
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+    }
+
+    nav.drawer {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #fff;
+      color: #333;
+      width: 200px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+
+    nav.drawer.open {
+      transform: translateX(0);
+    }
+
+    nav.drawer ul {
+      list-style: none;
+      padding: 1rem;
+    }
+
+    nav.drawer li {
+      margin-bottom: 1rem;
+    }
+
+    nav.drawer a {
+      text-decoration: none;
+      color: #900c3f;
+      font-weight: bold;
+    }
+
+    nav.drawer a.active {
+      color: #e74c3c;
+    }
+
+    /* About Section */
+    .about {
+      flex-grow: 1;
+      padding: 3rem 1rem;
+    }
+
+    .about h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #900c3f;
+    }
+
+    .about p {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav.drawer {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <div class="container header-container">
+      <h1 class="logo">Baverageis</h1>
+      <button class="menu-toggle" aria-label="Toggle Menu">&#9776;</button>
+      <nav class="drawer">
+        <ul>
+          <li><a href="sobolo.html" class="active">Home</a></li>
+          <li><a href="product.html">Products</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section class="about">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>
+        At Baverageis, we are passionate about crafting the finest beverages that not only refresh you but also provide a unique sensory experience.
+        Our journey started with a vision to redefine quality and taste in every sip.
+      </p>
+      <p>
+        Our team is dedicated to sourcing only the best ingredients and using innovative techniques to create beverages that stand out in the market.
+        We pride ourselves on our commitment to sustainability and excellence.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Baverageis. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const drawer = document.querySelector('.drawer');
+
+    menuToggle.addEventListener('click', () => {
+      drawer.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!drawer.contains(e.target) && !menuToggle.contains(e.target)) {
+        drawer.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

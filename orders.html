@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Orders</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: #111;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 1rem;
+    }
+    .container {
+      padding: 2rem;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .actions input {
+      padding: 0.5rem;
+      flex: 1;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .actions button {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+    }
+    .clear-btn { background-color: #dc3545; }
+    .export-btn { background-color: #007bff; }
+    .clear-btn:hover { background-color: #c82333; }
+    .export-btn:hover { background-color: #0056b3; }
+    .order {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .order h3 { margin-top: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th { background-color: #f1f1f1; }
+    .no-orders {
+      text-align: center;
+      padding: 2rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Customer Orders</h1>
+    <a href="product.html">← Back to Products</a>
+  </header>
+
+  <div class="container">
+    <div class="actions">
+      <input type="text" id="search" placeholder="Search by name or email...">
+      <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+      <button class="export-btn" onclick="exportToPDF()">Export to PDF</button>
+      <button class="clear-btn" onclick="clearOrders()">Clear Orders</button>
+    </div>
+    <div id="orders-container"></div>
+  </div>
+
+  <script>
+    const container = document.getElementById('orders-container');
+    const searchInput = document.getElementById('search');
+    let orders = [];
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch('http://localhost:5000/api/orders');
+        orders = await res.json();
+        displayOrders();
+      } catch (err) {
+        container.innerHTML = '<p class="no-orders">Failed to fetch orders.</p>';
+      }
+    }
+
+    function displayOrders(filter = '') {
+      container.innerHTML = '';
+      const filtered = orders.filter(order =>
+        order.fullname.toLowerCase().includes(filter) ||
+        order.email.toLowerCase().includes(filter)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="no-orders">No orders found.</p>`;
+        return;
+      }
+
+      filtered.forEach((order, index) => {
+        const orderDiv = document.createElement('div');
+        orderDiv.classList.add('order');
+        orderDiv.innerHTML = `
+          <h3>Order #${index + 1}</h3>
+          <p><strong>Name:</strong> ${order.fullname}</p>
+          <p><strong>Email:</strong> ${order.email}</p>
+          <p><strong>Address:</strong> ${order.address}</p>
+          <p><strong>Date:</strong> ${order.orderDate}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price ($)</th>
+                <th>Qty</th>
+                <th>Total ($)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.cart.map(item => `
+                <tr>
+                  <td>${item.name}</td>
+                  <td>${item.price.toFixed(2)}</td>
+                  <td>${item.quantity}</td>
+                  <td>${(item.price * item.quantity).toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+        container.appendChild(orderDiv);
+      });
+    }
+
+    async function clearOrders() {
+      if (!confirm('Are you sure you want to delete all orders?')) return;
+      await fetch('http://localhost:5000/api/orders', { method: 'DELETE' });
+      orders = [];
+      displayOrders();
+    }
+
+    function exportToCSV() {
+      if (orders.length === 0) return alert("No orders to export.");
+      let csv = "Name,Email,Address,Date,Product,Price,Quantity,Total\n";
+
+      orders.forEach(order => {
+        order.cart.forEach(item => {
+          csv += `"${order.fullname}","${order.email}","${order.address}","${order.orderDate}","${item.name}",${item.price},${item.quantity},${(item.price * item.quantity).toFixed(2)}\n`;
+        });
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'orders.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+
+      doc.setFontSize(14);
+      doc.text("Customer Orders", 10, y);
+      y += 10;
+
+      if (orders.length === 0) {
+        doc.text("No orders to export.", 10, y);
+      } else {
+        orders.forEach((order, i) => {
+          if (y > 270) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.setFontSize(12);
+          doc.text(`Order #${i + 1}`, 10, y);
+          y += 6;
+          doc.setFontSize(10);
+          doc.text(`Name: ${order.fullname}`, 10, y); y += 5;
+          doc.text(`Email: ${order.email}`, 10, y); y += 5;
+          doc.text(`Address: ${order.address}`, 10, y); y += 5;
+          doc.text(`Date: ${order.orderDate}`, 10, y); y += 6;
+
+          order.cart.forEach(item => {
+            if (y > 270) {
+              doc.addPage();
+              y = 10;
+            }
+            doc.text(`- ${item.name} | $${item.price} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`, 14, y);
+            y += 5;
+          });
+          y += 8;
+        });
+      }
+      doc.save('customer_orders.pdf');
+    }
+
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.trim().toLowerCase();
+      displayOrders(filter);
+    });
+
+    fetchOrders();
+  </script>
+</body>
+</html>

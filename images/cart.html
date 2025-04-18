@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart</title>
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --secondary: #2E7D32;
+      --background: #F1F8E9;
+      --text: #333;
+      --accent: #AED581;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text);
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    section {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        color: var(--secondary);
+      }
+
+      td, th {
+        text-align: right;
+        padding: 0.75rem;
+      }
+    }
+
+    .btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .btn:hover {
+      background-color: #1B5E20;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: var(--primary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Your Order Our Responsibility</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Product Details</h2>
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled by JavaScript -->
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Contact Info</h2>
+      <table id="contactTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filled by JavaScript -->
+        </tbody>
+      </table>
+    </section>
+
+    <button class="btn" onclick="checkout()">Checkout</button>
+  </main>
+
+  <footer>
+    &copy; 2025 Baverages. All rights reserved.
+  </footer>
+
+  <script>
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const userContact = JSON.parse(localStorage.getItem("contact")) || {};
+
+    const productTable = document.getElementById("productTable").querySelector("tbody");
+    cartItems.forEach(item => {
+      const row = productTable.insertRow();
+      row.innerHTML = `
+        <td data-label="Product Name">${item.name}</td>
+        <td data-label="Qty">${item.quantity}</td>
+        <td data-label="Price">GHS ${item.price.toFixed(2)}</td>
+        <td data-label="Total">GHS ${(item.quantity * item.price).toFixed(2)}</td>
+      `;
+    });
+
+    const contactTable = document.getElementById("contactTable").querySelector("tbody");
+    const contactRow = contactTable.insertRow();
+    contactRow.innerHTML = `
+      <td data-label="Name">${userContact.name || '-'}</td>
+      <td data-label="Email">${userContact.email || '-'}</td>
+      <td data-label="Phone">${userContact.phone || '-'}</td>
+      <td data-label="Message">${userContact.message || '-'}</td>
+    `;
+
+    function checkout() {
+      const payload = {
+        cart: cartItems,
+        contact: userContact,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch("https://your-backend-url.com/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Order submitted successfully!");
+          localStorage.removeItem("cart");
+          localStorage.removeItem("contact");
+          window.location.reload();
+        } else {
+          alert("Failed to submit order. Try again.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Network error while submitting order.");
+      });
+    }
+  </script>
+</body>
+</html>
